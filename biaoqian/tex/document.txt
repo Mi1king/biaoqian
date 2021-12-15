@@ -5,6 +5,7 @@
 \setmainfont{Times New Roman}
 \usepackage{geometry}
 \pagestyle{empty}
+\usepackage{color}
 \geometry{a4paper,left=0.75in,right=0.75in,top=0.75in,bottom=0.75in}
 %\newcommand{\chuhao}{\fontsize{72pt}{\baselineskip}\selectfont}
 %\newcommand{\xiaochuhao}{\fontsize{36pt}{\baselineskip}\selectfont}
