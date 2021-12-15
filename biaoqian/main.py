@@ -49,6 +49,8 @@ def tex_man(source, output):
                 data[d][2] = str(data[d][2]).replace("$", "\\$")
             if "_" in str(data[d][2]):
                 data[d][2] = str(data[d][2]).replace("_", "\\_")
+            if "#" in str(data[d][2]):
+                data[d][2] = str(data[d][2]).replace("#", "\\#")
             lines.append(l1)
             lines.append(l2 + d + l3)
             lines.append(l4)
@@ -117,6 +119,8 @@ def tex_op(source, output):
                 data[d][2] = str(data[d][2]).replace("_", "\\_")
             if "^" in str(data[d][2]):
                 data[d][2] = str(data[d][2]).replace("^", "\\^")
+            if "#" in str(data[d][2]):
+                data[d][2] = str(data[d][2]).replace("#", "\\#")
             lines.append(l1)
             lines.append(l2 + d + l3)
             lines.append(l4)
@@ -145,7 +149,7 @@ def tex_op(source, output):
         f.close()
 
 
-def tex_ebook(source, output):  # TODO: 添加ebook
+def tex_ebook(source, output):
     with open(source, "r", encoding='utf8') as f:
         data = json.load(f)
         # print(data)
@@ -163,11 +167,11 @@ def tex_ebook(source, output):  # TODO: 添加ebook
         l10 = '\\vspace{0.4cm}\n'
         l11 = '\erhao{'
         l12 = '}\n'
-        l13 = '\\vspace{6cm}\n'
+        l13 = '\\vspace{2cm}\n'
         ln = '\\end{center}\n'
         lnp = '\\newpage\n'
         lf = '\\end{document}'
-        le = '\\textcolor{red}{text(E-BOOK)\\\\电子书由任课老师直接发放}'
+        le = '\\\\\\textcolor{red}{(E-BOOK)\\\\电子书由任课老师直接发放}\n'
 
         # # print(line, "a")
         file1 = open(output, 'w', encoding='utf8')
@@ -181,8 +185,10 @@ def tex_ebook(source, output):  # TODO: 添加ebook
                 data[d][2] = str(data[d][2]).replace("$", "\\$")
             if "_" in str(data[d][2]):
                 data[d][2] = str(data[d][2]).replace("_", "\\_")
+            if "#" in str(data[d][2]):
+                data[d][2] = str(data[d][2]).replace("#", "\\#")
             lines.append(l1)
-            lines.append(l2 + '\\textcolor{red}{' + d + '}' + l3)
+            lines.append(l2 + '\\\\\\textcolor{red}{' + d + '}' + l3)
             lines.append(l4)
             lines.append(l5 + data[d][1] + l6)
             lines.append(l7)
@@ -204,6 +210,7 @@ def tex_ebook(source, output):  # TODO: 添加ebook
                 if not flag:
                     lines.append(lnp)
                 lines.append(l11 + data[d][2] + l12)
+                lines.append(le)
                 lines.append(ln)
                 lines.append(lnp)
                 count = 0
@@ -229,7 +236,7 @@ def sheet_to_json(file_name, json_file_name, sheet_name):
             price = str(table.cell_value(r, 4))
             book_dic[no] = [isbn, code, book_name, price]
         else:
-            book_dic[no] = [isbn, code, book_name]
+            book_dic[no[:-2]] = [isbn, code, book_name]
 
     with open(json_file_name, 'w') as f:
         json.dump(book_dic, f, indent=4)
@@ -283,6 +290,8 @@ def op_json(data, op):
 def compile_tex(path, filename):
     tex_path = os.path.join(path, "tex", filename, filename)
     output_path = os.path.join(path, "output")
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
     command = "xelatex " + "-output-directory=" + output_path + " " + tex_path + ".tex"
     os.system(command)
     file_full_path = os.path.join(output_path, filename) + ".aux"
@@ -314,16 +323,16 @@ if __name__ == '__main__':
     print("INFO: json file generation for Mandatory")
     tex_man(mandatory_json_name, "tex/man/man.tex")
     print("INFO: tex file generation for Mandatory")
-    # compile_tex(root, "man")
-    # print("DONE: pdf generation for Mandatory")
+    compile_tex(root, "man")
+    print("DONE: pdf generation for Mandatory")
 
     # Optional
     sheet_to_json(file_name, optional_json_name, optional_sheet_name)
     print("INFO: json file generation for Optional")
     tex_op(optional_json_name, "tex/op/op.tex")
     print("INFO: tex file generation for Optional")
-    # compile_tex(root, "op")
-    # print("DONE: pdf generation for Optional")
+    compile_tex(root, "op")
+    print("DONE: pdf generation for Optional")
 
     # Ebook
     sheet_to_json(file_name, ebook_json_name, ebook_sheet_name)
