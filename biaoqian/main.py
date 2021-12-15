@@ -167,6 +167,8 @@ def tex_ebook(source, output):  # TODO: 添加ebook
         ln = '\\end{center}\n'
         lnp = '\\newpage\n'
         lf = '\\end{document}'
+        le = '\\textcolor{red}{text(E-BOOK)\\\\电子书由任课老师直接发放}'
+
         # # print(line, "a")
         file1 = open(output, 'w', encoding='utf8')
         count = 0
@@ -180,7 +182,7 @@ def tex_ebook(source, output):  # TODO: 添加ebook
             if "_" in str(data[d][2]):
                 data[d][2] = str(data[d][2]).replace("_", "\\_")
             lines.append(l1)
-            lines.append(l2 + d + l3)
+            lines.append(l2 + '\\textcolor{red}{' + d + '}' + l3)
             lines.append(l4)
             lines.append(l5 + data[d][1] + l6)
             lines.append(l7)
@@ -191,6 +193,7 @@ def tex_ebook(source, output):  # TODO: 添加ebook
                 lines.append(l10)
             if count == 0:
                 lines.append(l11 + data[d][2] + l12)
+                lines.append(le)
                 lines.append(ln)
                 lines.append(l13)
                 count = 1
@@ -327,7 +330,7 @@ if __name__ == '__main__':
     print("INFO: json file generation for Ebook")
     tex_ebook(ebook_json_name, "tex/ebook/ebook.tex")
     print("INFO: tex file generation for Ebook")
-    # compile_tex(root, "ebook")
-    # print("DONE: compile tex for Ebook")
+    compile_tex(root, "ebook")
+    print("DONE: compile tex for Ebook")
 
     print("All done!!!")
