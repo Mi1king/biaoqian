@@ -221,8 +221,12 @@ def sheet_to_json(file_name, json_file_name, sheet_name):
         isbn = str(table.cell_value(r, 2))
         book_name = str(table.cell_value(r, 3))
         code = str(table.cell_value(r, 1))
-        no = str(table.cell_value(r, 0))[:-2]
-        book_dic[no] = [isbn, code, book_name]
+        no = str(table.cell_value(r, 0))
+        if sheet_name == 'Optional':
+            price = str(table.cell_value(r, 4))
+            book_dic[no] = [isbn, code, book_name, price]
+        else:
+            book_dic[no] = [isbn, code, book_name]
 
     with open(json_file_name, 'w') as f:
         json.dump(book_dic, f, indent=4)
@@ -313,7 +317,7 @@ if __name__ == '__main__':
     # Optional
     sheet_to_json(file_name, optional_json_name, optional_sheet_name)
     print("INFO: json file generation for Optional")
-    tex_ebook(optional_json_name, "tex/op/op.tex")
+    tex_op(optional_json_name, "tex/op/op.tex")
     print("INFO: tex file generation for Optional")
     # compile_tex(root, "op")
     # print("DONE: pdf generation for Optional")
