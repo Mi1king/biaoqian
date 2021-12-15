@@ -218,7 +218,7 @@ def sheet_to_json(file_name, json_file_name, sheet_name):
     book_dic = {}
     n_rows = table.nrows
     for r in range(1, n_rows - 1):
-        isbn = str(table.cell_value(r, 2))[:-2]
+        isbn = str(table.cell_value(r, 2))
         book_name = str(table.cell_value(r, 3))
         code = str(table.cell_value(r, 1))
         no = str(table.cell_value(r, 0))[:-2]
